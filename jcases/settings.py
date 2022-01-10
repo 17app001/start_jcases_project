@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "case.apps.CaseConfig",
+    "user.apps.UserConfig",
 ]
 
 MIDDLEWARE = [
@@ -119,3 +120,6 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 設定USER_MODEL
+AUTH_USER_MODEL = 'user.Profile'
