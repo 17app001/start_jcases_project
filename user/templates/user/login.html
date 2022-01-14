@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+{% block content %}
+<h1>Login</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="username">帳號</label>
+        <input type="text" name="username" id="username" value="{{username}}" placeholder=" 請輸入帳號" required>
+    </div>
+    <div>
+        <label for="username">密碼</label>
+        <input type="password" name="password" id="password" value="{{password}}" placeholder="請輸入密碼" required>
+    </div>
+    <br>
+    <div>
+        <!-- <input type="submit" value="登入"> -->
+        <button type="submit">登入</button>
+        <div id="message">
+            {% if message %}
+            <p style="color: red;">{{message}}</p>
+            {% endif %}
+        </div>
 
-<body>
-    <h1>Login</h1>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <div>
-            <label for="username">帳號</label>
-            <input type="text" name="username" id="username" placeholder="請輸入帳號">
-        </div>
-        <div>
-            <label for="username">密碼</label>
-            <input type="password" name="password" id="password" placeholder="請輸入密碼">
-        </div>
-        <br>
-        <div>
-            <button type="submit">登入</button>
-        </div>
-    </form>
-</body>
-
-</html>
+    </div>
+</form>
+{% endblock %}
