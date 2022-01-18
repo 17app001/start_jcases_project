@@ -1,10 +1,34 @@
 from cmath import log
+from email import message
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.models import User
 from user.models import Profile
+from user.forms import ProfileForm
+
 
 # Create your views here.
+
+# 註冊
+
+
+def user_register(request):
+    form = ProfileForm()
+    if request.method == 'POST':
+        # 將資訊傳入
+        form = ProfileForm(request.POST)
+        print(form)
+        # 表單輸入是否正確
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+
+            login(request, user)
+
+            return redirect('cases')
+
+    return render(request, './user/register.html', {'form': form})
 
 # 登出
 
