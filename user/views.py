@@ -9,7 +9,11 @@ from user.forms import ProfileForm
 
 # Create your views here.
 
-# 註冊
+# 個人資訊
+def profile(request, id):
+    user = Profile.objects.get(id=id)
+    print(user)
+    return render(request, './user/profile.html', {'user': user})
 
 
 def user_register(request):

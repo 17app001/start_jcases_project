@@ -7,4 +7,5 @@ class ProfileForm(UserCreationForm):
     class Meta:
         model = Profile
         # 增加email
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1',
+                  'password2', 'city', 'respondent']

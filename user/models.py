@@ -39,7 +39,8 @@ class Profile(AbstractUser):
     # 居住縣市
     city = models.ForeignKey(City, on_delete=SET_NULL, null=True)
     # 身分
-    respondent = models.ForeignKey(Respondent, on_delete=SET_NULL, null=True)
+    respondent = models.ForeignKey(
+        Respondent, on_delete=SET_NULL, null=True)
 
     def __str__(self):
         return self.username
