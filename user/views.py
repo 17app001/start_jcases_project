@@ -2,14 +2,16 @@ from cmath import log
 from email import message
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-# from django.contrib.auth.models import User
 from user.models import Profile
 from user.forms import ProfileForm
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 # 個人資訊
+
+
+@login_required(login_url='login')
 def profile(request, id):
     user = Profile.objects.get(id=id)
     print(user)
@@ -18,6 +20,7 @@ def profile(request, id):
 
 def user_register(request):
     form = ProfileForm()
+
     if request.method == 'POST':
         # 將資訊傳入
         form = ProfileForm(request.POST)
@@ -37,6 +40,7 @@ def user_register(request):
 # 登出
 
 
+@login_required(login_url='login')
 def user_logout(request):
     if request.user.is_authenticated:
         logout(request)

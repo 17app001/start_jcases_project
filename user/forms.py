@@ -1,4 +1,3 @@
-from xml.dom import ValidationErr
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
 
