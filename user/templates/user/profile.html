@@ -30,16 +30,22 @@
                 <th>金額</th>
                 <th>分類</th>
                 <th>檢視次數</th>
+                <th>更新日期</th>
+                <th>功能</th>
             </tr>
         </thead>
         <tbody>
             {% for case in user.case_set.all %}
             <tr>
-                <td>{{case.createdon}}</td>
+                <td>{{case.createdon|date:"Y/m/d"}}</td>
                 <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
                 <td>{{case.amount}}</td>
                 <td>{{case.category}}</td>
                 <td>{{case.view}}</td>
+                <td>{{case.updatedon}}</td>
+                <td><a href="{% url 'delete-case' case.id %}">刪除</a>
+                    <br><a href="{% url 'update-case' case.id %}">修改</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

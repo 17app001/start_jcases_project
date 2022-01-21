@@ -17,7 +17,7 @@
         <tbody>
             {% for case in cases %}
             <tr>
-                <td>{{case.createdon}}</td>
+                <td>{{case.createdon|date:"Y/m/d"}}</td>
                 <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
                 <td>{{case.amount}}</td>
                 <td>{{case.category}}</td>

@@ -2,12 +2,44 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Case
 from .forms import CreateCaseForm
+from datetime import datetime
 # Create your views here.
+
+@login_required(login_url='login')
+def update_case(request,id):
+    case=Case.objects.get(id=id)  
+
+    if request.method=='POST':
+        case.updatedon=datetime.now().strftime('%Y-%m-%d %H:%M:%S')       
+        form=CreateCaseForm(request.POST,instance=case)        
+        
+        if form.is_valid(): 
+            form.save()
+            return redirect('profile',id=request.user.id) 
+    
+    if request.method=='GET':
+        form=CreateCaseForm(instance=case)
+
+    return render(request, './case/update-case.html',{'form':form})
+
+
+
+@login_required(login_url='login')
+def delete_case(request,id):
+    case=Case.objects.get(id=id)
+
+    if request.method=='POST':
+        if request.POST.get('confirm'):
+            case.delete()
+      
+        return redirect('profile',id=request.user.id)    
+
+
+    return render(request, './case/delete-case.html',{'case': case})
 
 
 def case(request, id):
     case = Case.objects.get(id=id)
-
     case.view += 1
     setattr(case, 'view', case.view)
     case.save()
