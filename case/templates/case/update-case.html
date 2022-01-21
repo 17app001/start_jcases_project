@@ -7,6 +7,11 @@
     {{form.as_p}}
     <button type="submit">更新</button>
 </form>
-<a href="{% url 'profile' request.user.id %}">返回</a>
+
+{% if page == "case" %}
+    <a href="{% url 'case' form.instance.id %}">返回</a>
+{% elif page == "profile" %}
+    <a href="{% url 'profile' request.user.id %}">返回</a>
+{% endif %}
 
 {% endblock %}
