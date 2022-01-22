@@ -3,6 +3,30 @@
 {% block content %}
 
 <h1>Cases</h1>
+<p>
+<form action="" method="POST">
+    {% csrf_token %}
+    <select name="category" id="category">
+        <option value="">全部類別</option>
+        {% for category in categorys %}
+        <option value="{{category.id}}" {% if category.id == category_id %} selected="selected" {% endif %}>
+            {{category}}
+        </option>
+        {% endfor %}
+    </select>
+    <select name="county" id="county">
+        <option value="">全部縣市</option>
+        {% for county in countys %}
+        <option value="{{county.id}}" {% if county.id == county_id %} selected="selected" {% endif %}>
+            {{county}}
+        </option>
+        {% endfor %}
+    </select>
+    <input type="text" name="search" id="search" value="{{search}}">
+    <button type="submit">搜尋</button>
+</form>
+</p>
+
 <div id="cases-table">
     <table border="1">
         <thead>
@@ -11,6 +35,7 @@
                 <th>標題</th>
                 <th>金額</th>
                 <th>分類</th>
+                <th>縣市</th>
                 <th>檢視次數</th>
             </tr>
         </thead>
@@ -21,6 +46,7 @@
                 <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
                 <td>{{case.amount}}</td>
                 <td>{{case.category}}</td>
+                <td>{{case.owner.city}}</td>
                 <td>{{case.view}}</td>
             </tr>
             {% endfor %}

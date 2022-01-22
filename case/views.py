@@ -1,8 +1,12 @@
+from unicodedata import category
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Case
+from tables import Description
+from .models import Case, Category
 from .forms import CreateCaseForm
+from user.models import City
 from datetime import datetime
+from django.db.models import Q
 # Create your views here.
 
 
@@ -83,6 +87,53 @@ def create_case(request):
 
 
 def cases(request):
-    cases = Case.objects.all()
-    # print(cases)
-    return render(request, './case/cases.html', {'cases': cases})
+   
+    categorys = Category.objects.all()
+    countys = City.objects.all()
+
+    category_id, county_id = 0, 0
+    search = ''
+
+    if request.method=='GET':      
+        cases = Case.objects.all()
+
+    if request.method == 'POST':
+        category_id = eval(
+            request.POST['category']) if request.POST['category'] else 0
+        county_id = eval(request.POST['county']
+                         ) if request.POST['county'] else 0
+        search = request.POST['search']
+        try:
+            if category_id and county_id:
+                if search:
+                     cases = Case.objects.filter(Q(category_id=category_id) & Q(
+                    owner__city_id=county_id)).filter(
+                    Q(title__contains=search) | Q(description__contains=search))
+                else:
+                    cases = Case.objects.filter(Q(category_id=category_id) & Q(
+                        owner__city_id=county_id))                    
+            elif category_id:
+                if search:
+                    cases = Case.objects.filter(category_id=category_id).filter(
+                    Q(title__contains=search) | Q(description__contains=search))
+                else:
+                    cases = Case.objects.filter(category_id=category_id)
+            elif county_id:
+                if search:
+                     cases = Case.objects.filter(owner__city_id=county_id).filter(
+                    Q(title__contains=search) | Q(description__contains=search))
+                cases = Case.objects.filter(owner__city_id=county_id)
+            elif search:
+                    cases = Case.objects.filter(
+                     Q(title__contains=search) | Q(description__contains=search))   
+            else:
+                cases = Case.objects.all()
+         
+
+        except Exception as e:
+            print(e)    
+
+    context = {'cases': cases, 'categorys': categorys, 'countys': countys, 'search': search,
+               'category_id': category_id, 'county_id': county_id}
+
+    return render(request, './case/cases.html', context=context)
