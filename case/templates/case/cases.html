@@ -3,7 +3,53 @@
 {% block content %}
 
 <h1>Cases</h1>
-<div id="cases-table">
+{{category_id}}
+<p>
+<form action="" method="POST" id="searchForm">
+    {% csrf_token %}
+    <select name="category" id="category">
+        <option value="">全部類別</option>
+        {% for category in categorys %}
+        <option value="{{category.id}}" {% if category.id == category_id %} selected="selected" {% endif %}>
+            {{category}}
+        </option>
+        {% endfor %}
+    </select>
+    <select name="county" id="county">
+        <option value="">全部縣市</option>
+        {% for county in countys %}
+        <option value="{{county.id}}" {% if county.id == county_id %} selected="selected" {% endif %}>
+            {{county}}
+        </option>
+        {% endfor %}
+    </select>
+    <input type="text" name="search" id="search" value="{{search}}">
+    <button type="submit">搜尋</button>
+</form>
+</p>
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link"
+            data-page="{{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}"  class="page-link"
+            data-page="{{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+<div id="cases-table" >
     <table border="1">
         <thead>
             <tr>
@@ -11,20 +57,43 @@
                 <th>標題</th>
                 <th>金額</th>
                 <th>分類</th>
+                <th>縣市</th>
                 <th>檢視次數</th>
             </tr>
         </thead>
         <tbody>
-            {% for case in cases %}
+            {% for case in page_obj %}
             <tr>
                 <td>{{case.createdon|date:"Y/m/d"}}</td>
                 <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
                 <td>{{case.amount}}</td>
                 <td>{{case.category}}</td>
+                <td>{{case.owner.city}}</td>
                 <td>{{case.view}}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+
+<script>
+    // const searchFormEl=document.getElementById('searchForm');
+    // const pageLinkEl=document.getElementsByClassName('page-link');
+    
+    // if(searchFormEl){
+    //     for(let i=0;pageLinkEl.length>i;i++){
+    //         pageLinkEl[i].addEventListener('click',function(e){
+    //             e.preventDefault();
+              
+    //             let page=this.dataset.page;
+    //             console.log(page);
+
+    //         })
+
+    //     }
+    // }
+
+
+</script>
 {% endblock %}
