@@ -1,8 +1,13 @@
+from unicodedata import category
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Case
+from tables import Description
+from .models import Case, Category
 from .forms import CreateCaseForm
+from user.models import City
 from datetime import datetime
+from django.db.models import Q
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -83,6 +88,50 @@ def create_case(request):
 
 
 def cases(request):
-    cases = Case.objects.all()
-    # print(cases)
-    return render(request, './case/cases.html', {'cases': cases})
+    categorys = Category.objects.all()
+    countys = City.objects.all()
+
+    category_id, county_id = 0, 0
+    search = ''
+
+    if request.method == 'GET':
+        cases = Case.objects.all()
+
+    if request.method == 'POST':
+        category_id = eval(
+            request.POST['category']) if request.POST['category'] else 0
+        county_id = eval(request.POST['county']
+                         ) if request.POST['county'] else 0
+        search = request.POST['search']
+
+        search_q = Q(title__contains=search) | Q(description__contains=search)
+        category_q = Q(category_id=category_id)
+        city_q = Q(owner__city_id=county_id)
+
+        try:
+            if category_id and county_id:
+                cases = Case.objects.filter(category_q & city_q & search_q) if search else\
+                    Case.objects.filter(category_q & city_q)
+            elif category_id:
+                cases = Case.objects.filter(
+                    category_q & search_q) if search else\
+                    Case.objects.filter(category_q)
+            elif county_id:
+                cases = Case.objects.filter(city_q & search_q) if search else\
+                    Case.objects.filter(city_q)
+            elif search:
+                cases = Case.objects.filter(search_q)
+            else:
+                cases = Case.objects.all()
+        except Exception as e:
+            print(e)
+
+    # 每次固定顯示幾筆資料
+    paginator = Paginator(cases, 10) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'categorys': categorys, 'countys': countys, 'search': search,
+               'category_id': category_id, 'county_id': county_id,'page_obj':page_obj}
+
+    return render(request, './case/cases.html', context=context)
