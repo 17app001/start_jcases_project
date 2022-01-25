@@ -35,7 +35,7 @@ def user_register(request):
 
             login(request, user)
 
-            return redirect('cases')
+            return redirect('index')
 
     return render(request, './user/register.html', {'form': form})
 
@@ -61,7 +61,7 @@ def user_login(request):
 
             if user:
                 login(request, user)
-                return redirect('cases')
+                return redirect('index')
             else:
                 if Profile.objects.filter(username=username).exists():
                     message = '密碼錯誤'
