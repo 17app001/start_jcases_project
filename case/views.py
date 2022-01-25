@@ -1,13 +1,11 @@
-from unicodedata import category
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from tables import Description
 from .models import Case, Category
 from .forms import CreateCaseForm
 from user.models import City
 from datetime import datetime
-from django.db.models import Q
-# Create your views here.
+from .utils import search_cases, get_page_object
 
 
 @login_required(login_url='login')
@@ -86,54 +84,68 @@ def create_case(request):
     return render(request, './case/create-case.html', {'form': form})
 
 
-def cases(request):
-   
+def index(request):
     categorys = Category.objects.all()
     countys = City.objects.all()
+    category_id, county_id, search = 0, 0, ''
+    cases = search_cases(category_id, county_id, search)
+    page = request.GET.get('page')
+    page_num = 5
+    page_obj = get_page_object(cases, page, page_num)
 
-    category_id, county_id = 0, 0
-    search = ''
+    context = {'categorys': categorys, 'countys': countys, 'search': search,
+               'category_id': category_id, 'county_id': county_id, 'page_obj': page_obj}
 
-    if request.method=='GET':      
-        cases = Case.objects.all()
+    response = render(request, './case/cases.html', context=context)
+    # 刪除cookie
+    response.delete_cookie('category_id')
+    response.delete_cookie('county_id')
+    response.delete_cookie('search')
+
+    return response
+
+
+def cases(request):
+    categorys = Category.objects.all()
+    countys = City.objects.all()
+    # 取得cookies
+    category_id = request.COOKIES.get('category_id', 0)
+    county_id = request.COOKIES.get('county_id', 0)
+    search = request.COOKIES.get('search', '')
+    # 轉型成數值進行搜尋用
+    category_id = eval(category_id) if type(
+        category_id) == str else category_id
+    county_id = eval(county_id) if type(county_id) == str else county_id
+
+    if request.method == 'GET':
+        page = request.GET.get('page')
+        cases = search_cases(category_id, county_id, search)
 
     if request.method == 'POST':
+        # 重新取得頁數
+        page = 1
         category_id = eval(
             request.POST['category']) if request.POST['category'] else 0
         county_id = eval(request.POST['county']
                          ) if request.POST['county'] else 0
         search = request.POST['search']
-        try:
-            if category_id and county_id:
-                if search:
-                     cases = Case.objects.filter(Q(category_id=category_id) & Q(
-                    owner__city_id=county_id)).filter(
-                    Q(title__contains=search) | Q(description__contains=search))
-                else:
-                    cases = Case.objects.filter(Q(category_id=category_id) & Q(
-                        owner__city_id=county_id))                    
-            elif category_id:
-                if search:
-                    cases = Case.objects.filter(category_id=category_id).filter(
-                    Q(title__contains=search) | Q(description__contains=search))
-                else:
-                    cases = Case.objects.filter(category_id=category_id)
-            elif county_id:
-                if search:
-                     cases = Case.objects.filter(owner__city_id=county_id).filter(
-                    Q(title__contains=search) | Q(description__contains=search))
-                cases = Case.objects.filter(owner__city_id=county_id)
-            elif search:
-                    cases = Case.objects.filter(
-                     Q(title__contains=search) | Q(description__contains=search))   
-            else:
-                cases = Case.objects.all()
-         
+        cases = search_cases(category_id, county_id, search)
 
-        except Exception as e:
-            print(e)    
+    page_num = 5
+    page_obj = get_page_object(cases, page, page_num)
 
-    context = {'cases': cases, 'categorys': categorys, 'countys': countys, 'search': search,
-               'category_id': category_id, 'county_id': county_id}
+    context = {'categorys': categorys, 'countys': countys, 'search': search,
+               'category_id': category_id, 'county_id': county_id, 'page_obj': page_obj}
 
-    return render(request, './case/cases.html', context=context)
+    response = render(request, './case/cases.html', context=context)
+
+    # post 才會更新搜尋需求
+    if request.method == 'POST':
+        # 儲存為字串
+        response.set_cookie('category_id', category_id)
+        response.set_cookie('county_id', county_id)
+        # 設定中文
+        response.set_cookie('search', bytes(
+            search, 'utf-8').decode('iso-8859-1'))
+
+    return response
