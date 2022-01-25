@@ -2,19 +2,50 @@ from cmath import log
 from email import message
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from user.models import Profile
+from user.models import Profile,City,Respondent
 from user.forms import ProfileForm
 from django.contrib.auth.decorators import login_required
+from case.models import Case
+from case.utils import get_page_object
 
 # Create your views here.
 
+@login_required(login_url='login')
+def user_update(request,id):   
+    respondents=Respondent.objects.all()
+    user = Profile.objects.get(id=id)
+    message=None
+
+    if request.method=='POST':       
+        new_email=request.POST.get('new-email')       
+        respondent_id=request.POST.get('respondent-id')       
+
+        if not new_email:
+            message='請輸入Email'                 
+        elif not Profile.objects.filter(email=new_email) or user.email==new_email:
+            setattr(user, 'email', new_email)          
+            setattr(user,'respondent',Respondent.objects.get(id=respondent_id))
+            message='資料更新成功!'           
+            user.save()
+
+            return redirect('profile', id=user.id)
+        else:         
+            message='Email已經註冊'            
+
+        
+    return render(request, './user/update.html',{'message':message,'respondents':respondents})
+
+
 # 個人資訊
-
-
 @login_required(login_url='login')
 def profile(request, id):
     user = Profile.objects.get(id=id)
-    respsone=render(request, './user/profile.html', {'user': user})
+    cases=user.case_set.all()
+    page = request.GET.get('page')
+    page_num=10
+    page_obj = get_page_object(cases, page, page_num)
+
+    respsone=render(request, './user/profile.html', {'user': user,'page_obj':page_obj})
     respsone.set_cookie('page','profile') 
 
     return respsone

@@ -15,12 +15,13 @@
     <li>身分:{{user.respondent}}</li>
 </ul>
 <p>
-    <a href="">資訊修改</a>
+    <a href="{% url 'update' user.id %}">資訊修改</a>
     <a href="">點數儲值</a>
 </p>
 {% if user.case_set.all|length == 0 %}
 <h2>目前無發布Case</h2>
 {% else %}
+{% include 'pagination.html' %}
 <div id="cases-table">
     <table border="1">
         <thead>
@@ -35,7 +36,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for case in user.case_set.all %}
+            {% for case in page_obj %}
             <tr>
                 <td>{{case.createdon|date:"Y/m/d"}}</td>
                 <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
