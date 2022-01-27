@@ -2,26 +2,20 @@
 {% block content %}
 <h1>Update</h1>
 <form action="" method="POST">
-    {% csrf_token %}
-    <div>
+    {% csrf_token %}   
+    <div>       
         <label for="new-email">輸入新的Email</label>     
-        <input type="email" name="new-email" id="new-email" value="{{request.user.email}}">
-    </div>
-    <div>                     
-        {% for respondent in respondents %}      
-        <input type="radio" name="respondent-id" id="id_respondent" value="{{respondent.id}}"
-        {% if respondent.id == request.user.respondent.id %}
-        checked {% endif %} 
-        >{{respondent}}
-        {% endfor %}
-        <!-- 請輸入新的身分({{request.user.respondent}})     -->
-        <!-- <select name="respondent-id" required id="id_respondent">          
-            {% for respondent in respondents %}           
+        <input type="email" name="new-email" id="new-email" value="{{request.user.email}}" {% if user.certification %} disabled {% endif %}>
+    </div>        
+    <div>              
+        請輸入新的身分({{request.user.respondent}})
+        <select name="respondent-id" required id="id_respondent">          
+            {% for respondent in respondents %}
             <option value="{{respondent.id}}" {% if respondent.id == request.user.respondent.id %}
              selected="selected" {% endif %} >
                 {{respondent}}</option>     
             {% endfor %}
-        </select> -->
+        </select>
     </div>    
     <div>    
         <button type="submit">更新</button>    

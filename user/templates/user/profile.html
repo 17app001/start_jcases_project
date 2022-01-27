@@ -8,12 +8,19 @@
     <li>點數:{{user.point}}</li>
     <li>Email:{{user.email}}
         {% if not user.certification %}
-        <a href="">認證</a>
+        <a href="{% url 'activate-email' %}">認證</a>
+        {% else %}
+        (已認證)
         {% endif %}
     </li>
     <li>居住地:{{user.city}}</li>
     <li>身分:{{user.respondent}}</li>
 </ul>
+<div id="message">
+    {% if message %}
+    <p style="color: red;">{{message}}</p>
+    {% endif %}
+</div>
 <p>
     <a href="{% url 'update' user.id %}">資訊修改</a>
     <a href="">點數儲值</a>

@@ -6,7 +6,7 @@ from .forms import CreateCaseForm
 from user.models import City
 from datetime import datetime
 from .utils import search_cases, get_page_object
-
+import sqlite3
 
 @login_required(login_url='login')
 def update_case(request, id):
@@ -85,6 +85,7 @@ def create_case(request):
 
 
 def index(request):
+    print(sqlite3.version)
     categorys = Category.objects.all()
     countys = City.objects.all()
     category_id, county_id, search = 0, 0, ''
@@ -113,8 +114,7 @@ def cases(request):
     county_id = request.COOKIES.get('county_id', 0)
     search = request.COOKIES.get('search', '')
     # 轉型成數值進行搜尋用
-    category_id = eval(category_id) if type(
-        category_id) == str else category_id
+    category_id = eval(category_id) if type(category_id) == str else category_id
     county_id = eval(county_id) if type(county_id) == str else county_id
 
     if request.method == 'GET':
@@ -124,10 +124,8 @@ def cases(request):
     if request.method == 'POST':
         # 重新取得頁數
         page = 1
-        category_id = eval(
-            request.POST['category']) if request.POST['category'] else 0
-        county_id = eval(request.POST['county']
-                         ) if request.POST['county'] else 0
+        category_id = eval(request.POST['category']) if request.POST['category'] else 0
+        county_id = eval(request.POST['county']) if request.POST['county'] else 0
         search = request.POST['search']
         cases = search_cases(category_id, county_id, search)
 
@@ -145,7 +143,6 @@ def cases(request):
         response.set_cookie('category_id', category_id)
         response.set_cookie('county_id', county_id)
         # 設定中文
-        response.set_cookie('search', bytes(
-            search, 'utf-8').decode('iso-8859-1'))
+        response.set_cookie('search', bytes(search, 'utf-8').decode('iso-8859-1'))
 
     return response

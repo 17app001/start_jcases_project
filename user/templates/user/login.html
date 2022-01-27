@@ -11,6 +11,7 @@
     <div>
         <label for="username">密碼</label>
         <input type="password" name="password" id="password" value="{{password}}" placeholder="請輸入密碼" required>
+        <a href="{% url 'reset_password' %}">忘記密碼</a>
     </div>
     <br>
     <div>
@@ -21,7 +22,6 @@
             <p style="color: red;">{{message}}</p>
             {% endif %}
         </div>
-
     </div>
 </form>
 {% endblock %}
