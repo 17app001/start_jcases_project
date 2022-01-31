@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Purchase</h1>
+
+<p>
+    目前點數:{{user.point}}
+</p>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="select" style="display:inline-block;">
+        <select name="purchase-select" id="purchase-select">
+            <option value="100">100</option>
+            <option value="300">300</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+            <option value="3000">3000</option>
+            <option value="10000">10000</option>
+        </select>
+    </div>
+    <input type="submit" value="儲值">
+</form>
+
+{% endblock %}

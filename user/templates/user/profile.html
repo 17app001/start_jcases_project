@@ -8,7 +8,9 @@
     <li>點數:{{user.point}}</li>
     <li>Email:{{user.email}}
         {% if not user.certification %}
-        <a href="{% url 'activate-email' %}">認證</a>
+        {% if not message %}
+        <a href="{% url 'activate-email' %}">認證</a>(送100點)
+        {% endif %}
         {% else %}
         (已認證)
         {% endif %}
@@ -23,7 +25,7 @@
 </div>
 <p>
     <a href="{% url 'update' user.id %}">資訊修改</a>
-    <a href="">點數儲值</a>
+    <a href="{% url 'purchase' %}">點數儲值</a>
 </p>
 {% if user.case_set.all|length == 0 %}
 <h2>目前無發布Case</h2>

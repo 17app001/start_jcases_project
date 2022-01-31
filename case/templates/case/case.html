@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Case</h1>
-<ul>    
+<ul>
     {% if request.user == case.owner %}
     <p>
         <a href="{% url 'delete-case' case.id %}">刪除</a>&nbsp;&nbsp;
@@ -18,7 +18,15 @@
     <li>金額:{{case.amount}}</li>
     <li>內容:{{case.description|linebreaks}}</li>
     <li>技能:{{case.skill|linebreaks}}</li>
-    <li>合作方式:{{case.contact}}</li>
+
+    <li>合作方式:
+        {% if request.user.certification %}
+        {{case.contact}}
+        {% else %}
+        <a href="{% url 'activate-email' %}">請先認證Email</a>
+        {% endif %}
+    </li>
+
     <li>合作週期:{{case.period}}</li>
     <li>合作對象:
         {% for respondent in case.respondent.all %}

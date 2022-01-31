@@ -3,10 +3,18 @@
 
 {% block content %}
 <h1>Create Case</h1>
+{% if request.user.point == 0 %}
+{% if not request.user.certification %}
+目前無點數無法發布專案，<a href="{% url 'activate-email' %}">Email認證(送100點)</a>
+{% else %}
+點數已用完，<a href="{% url 'purchase' %}">儲值點數</a>
+
+{% endif %}
+{% else %}
 <form action="" method="POST">
     {% csrf_token %}
     {{form.as_p}}
-    <button type="submit">建立</button>
+    <button type="submit">建立</button>(扣除點數:1點)
 </form>
-
+{% endif %}
 {% endblock %}

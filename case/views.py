@@ -8,6 +8,7 @@ from datetime import datetime
 from .utils import search_cases, get_page_object
 import sqlite3
 
+
 @login_required(login_url='login')
 def update_case(request, id):
     case = Case.objects.get(id=id)
@@ -56,7 +57,6 @@ def delete_case(request, id):
 def case(request, id):
     case = Case.objects.get(id=id)
     case.view += 1
-    setattr(case, 'view', case.view)
     case.save()
 
     respsone = render(request, './case/case.html', {'case': case})
@@ -76,6 +76,8 @@ def create_case(request):
             case = form.save(commit=False)
             # 設定擁有者
             case.owner = request.user
+            case.owner.point -= 1
+            case.owner.save()
             case.save()
             form.save_m2m()
 
@@ -114,7 +116,8 @@ def cases(request):
     county_id = request.COOKIES.get('county_id', 0)
     search = request.COOKIES.get('search', '')
     # 轉型成數值進行搜尋用
-    category_id = eval(category_id) if type(category_id) == str else category_id
+    category_id = eval(category_id) if type(
+        category_id) == str else category_id
     county_id = eval(county_id) if type(county_id) == str else county_id
 
     if request.method == 'GET':
@@ -124,8 +127,10 @@ def cases(request):
     if request.method == 'POST':
         # 重新取得頁數
         page = 1
-        category_id = eval(request.POST['category']) if request.POST['category'] else 0
-        county_id = eval(request.POST['county']) if request.POST['county'] else 0
+        category_id = eval(
+            request.POST['category']) if request.POST['category'] else 0
+        county_id = eval(request.POST['county']
+                         ) if request.POST['county'] else 0
         search = request.POST['search']
         cases = search_cases(category_id, county_id, search)
 
@@ -143,6 +148,7 @@ def cases(request):
         response.set_cookie('category_id', category_id)
         response.set_cookie('county_id', county_id)
         # 設定中文
-        response.set_cookie('search', bytes(search, 'utf-8').decode('iso-8859-1'))
+        response.set_cookie('search', bytes(
+            search, 'utf-8').decode('iso-8859-1'))
 
     return response

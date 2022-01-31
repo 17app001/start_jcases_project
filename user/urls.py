@@ -24,6 +24,7 @@ urlpatterns = [
     path('update/<str:id>',views.update,name='update'),    
     path('activate-email/', views.activate_email,name='activate-email'),
     path('activate-user/<uidb64>/<token>/',views.user_activate, name='activate'),
+    path('purchase/',views.purchase, name='purchase'),
 
   
 ]
