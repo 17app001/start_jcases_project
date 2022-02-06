@@ -1,5 +1,29 @@
 {% extends 'base.html' %}
 
+{% block style %}
+<style>
+    #content{
+        float: left;
+        width: 60%;      
+    }
+    table{
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #right-side{
+        width: 40%;
+        float: right;
+        text-align: center;     
+    }
+    
+    ul {
+        padding: 0;
+        margin: 10px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <h1>Cases</h1>
@@ -24,33 +48,60 @@
     </select>
     <input type="text" name="search" id="search" value="{{search}}">
     <button type="submit">搜尋</button>
+    <span style="margin-left: 20px;">{{cases_length}}筆</span>
 </form>
 </p>
 {% include 'pagination.html' %}
-<div id="cases-table">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>日期</th>
-                <th>標題</th>
-                <th>金額</th>
-                <th>分類</th>
-                <th>縣市</th>
-                <th>檢視次數</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for case in page_obj %}
-            <tr>
-                <td>{{case.createdon|date:"Y/m/d"}}</td>
-                <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
-                <td>{{case.amount}}</td>
-                <td>{{case.category}}</td>
-                <td>{{case.owner.city}}</td>
-                <td>{{case.view}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div id="content">
+    <div id="cases-table">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>標題</th>
+                    <th>金額</th>
+                    <th>分類</th>
+                    <th>縣市</th>
+                    <th>檢視次數</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for case in page_obj %}
+                <tr>
+                    <td>{{case.createdon|date:"Y/m/d"}}</td>
+                    <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
+                    <td>{{case.amount}}</td>
+                    <td>{{case.category}}</td>
+                    <td>{{case.owner.city}}</td>
+                    <td>{{case.view}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="right-side">
+    <h3>TOP 5 Cases</h3>
+    <ul style="list-style-type: none;">
+        {% for case in top5_cases %}
+            {% if forloop.counter0 == 0 %}
+                <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}({{case.view}})</a></li>
+            {% else %}
+                <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <h3>TOP 5 Users</h3>
+    <ul style="list-style-type: none;">
+        {% for user in top5_users %}         
+            <li>
+                {{user|upper}}
+                {% if forloop.counter0 == 0 %}
+                   <b style="color:brown;"> ({{user.case_set.all|length}})</b>
+                {% endif %}            
+            </li>       
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
+
