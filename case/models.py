@@ -91,7 +91,7 @@ class Case(models.Model):
     respondent = models.ManyToManyField(Respondent)
     # 接案狀態
     state = models.ForeignKey(
-        State, null=True, on_delete=SET_NULL, default="新進案")
+        State, null=True, on_delete=SET_NULL)
     # 接案方式
     mode = models.ManyToManyField(Mode, blank=True)
     # 建立日期
