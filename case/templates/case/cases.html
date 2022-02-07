@@ -1,27 +1,6 @@
 {% extends 'base.html' %}
-
 {% block style %}
-<style>
-    #content{
-        float: left;
-        width: 60%;      
-    }
-    table{
-        width: 100%;
-        margin: 0 auto;
-    }
-    #right-side{
-        width: 40%;
-        float: right;
-        text-align: center;     
-    }    
-    ul {
-        padding: 0;
-        margin: 10px;
-    }
-</style>
 {% endblock %}
-
 {% block content %}
 
 <div class="container">
@@ -54,65 +33,79 @@
                 <div class="field">
                     <input type="text" class="input" name="search" id="search" value="{{search}}">                   
                 </div>
-                <div class="field">
+                <div class="field has-text-right">
                     <button type="submit" class="button is-warning">搜尋</button>                    
-                    <span class="is-size-4 ml-2 has-text-danger">共{{cases_length}}筆資料</span>
+                    <span class="is-size-4 ml-2 has-text-link">共{{cases_length}}筆資料</span>
                 </div>
             </form>
         </div>
     </div>
-    {% include 'pagination.html' %}
-    <div id="content">
-        <div id="cases-table">
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>日期</th>
-                        <th>標題</th>
-                        <th>金額</th>
-                        <th>分類</th>
-                        <th>縣市</th>
-                        <th>檢視次數</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for case in page_obj %}
-                    <tr>
-                        <td>{{case.createdon|date:"Y/m/d"}}</td>
-                        <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
-                        <td>{{case.amount}}</td>
-                        <td>{{case.category}}</td>
-                        <td>{{case.owner.city}}</td>
-                        <td>{{case.view}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <div class="columns">
+        <div class="column">
+            <div id="cases-table">
+                <table border="1" class="table is-size-6 is-bordered is-striped is-fullwidth">
+                    <thead>
+                        <tr class="th is-selected has-text-centered has-background-dark">
+                            <th>日期</th>
+                            <th>標題</th>
+                            <th>金額</th>
+                            <th>分類</th>
+                            <th>縣市</th>
+                            <th>檢視次數</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for case in page_obj %}
+                        <tr class="td has-text-centered">
+                            <td>{{case.createdon|date:"Y/m/d"}}</td>
+                            <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
+                            <td class="has-text-danger">{{case.amount}}</td>
+                            <td>{{case.category}}</td>
+                            <td>{{case.owner.city}}</td>
+                            <td>{{case.view}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div id="right-side">
-        <h3>TOP 5 Cases</h3>
-        <ul style="list-style-type: none;">
-            {% for case in top5_cases %}
-                {% if forloop.counter0 == 0 %}
-                    <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}({{case.view}})</a></li>
-                {% else %}
-                    <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}</a></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <h3>TOP 5 Users</h3>
-        <ul style="list-style-type: none;">
-            {% for user in top5_users %}         
-                <li>
-                    {{user|upper}}
-                    {% if forloop.counter0 == 0 %}
-                    <b style="color:brown;"> ({{user.case_set.all|length}})</b>
-                    {% endif %}            
-                </li>       
-            {% endfor %}
-        </ul>
-    </div>
+    <div class="column is-3">        
+        <div class="content is-normal">
+            <h3 class="is-size-5 has-text-centered box has-background-danger has-text-white">專案排行榜</h3>
+                <ol>
+                    {% for case in top5_cases %}
+                        {% if forloop.counter0 == 0 %}
+                            <li><a href="{% url 'case' case.id %}"> <b style="color:brown;" class="is-size-5">{{case|truncatechars:20}}({{case.view}})</a></b></li>
+                        {% else %}
+                            <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+        </div>
+        <div class="content is-normal">
+            <h3 class="is-size-5 has-text-centered box has-background-primary has-text-white">發布排行榜</h3>
+                <ul style="list-style-type: none;" class="box ml-1">
+                    {% for user in top5_users %}         
+                        <li class="has-text-centered">
+                            {{user|upper}}
+                            {% if forloop.counter0 == 0 %}
+                            <b>({{user.case_set.all|length}})</b>
+                            {% endif %}            
+                        </li>       
+                {% endfor %}
+                </ul>
+        </div>
+        <div class="column is-narrow has-text-centered"> 
+            {% include 'pagination.html' %}
+        </div>
+    </div>    
 </div>
+<footer class="footer">
+    <div class="content has-text-centered">
+      <b>
+        &copy; 2022 Jerry Chen ver 1.0
+      </b>
+    </div>
+</footer>
 {% endblock %}
 

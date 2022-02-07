@@ -86,7 +86,7 @@ def create_case(request):
 
 def index(request):  
     category_id, county_id, search = 0, 0, ''
-    page_num = 10  
+    page_num = 20  
     page = request.GET.get('page')  
 
     categorys = Category.objects.all()
@@ -134,7 +134,7 @@ def cases(request):
         search = request.POST['search']
         cases = search_cases(category_id, county_id, search)
 
-    page_num = 10
+    page_num = 20
     page_obj = get_page_object(cases, page, page_num)
 
     context = {'categorys': categorys, 'countys': countys, 'search': search,
