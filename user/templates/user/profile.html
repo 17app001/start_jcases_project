@@ -1,65 +1,88 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Profile</h1>
 
-<ul>
-    <li>{{user.username}}</li>
-    <li>點數:{{user.point}}</li>
-    <li>Email:{{user.email}}
-        {% if not user.certification %}
-        {% if not message %}
-        <a href="{% url 'activate-email' %}">認證</a>(送100點)
-        {% endif %}
-        {% else %}
-        (已認證)
-        {% endif %}
-    </li>
-    <li>居住地:{{user.city}}</li>
-    <li>身分:{{user.respondent}}</li>
-</ul>
-<div id="message">
-    {% if message %}
-    <p style="color: red;">{{message}}</p>
-    {% endif %}
+<div class="container mt-3 is-size-4">
+    <div class="columns">
+        <div class="column is-6">
+            <div class="card">
+                <header class="card-header has-background-primary">
+                    <p class="card-header-title has-text-white">
+                        {{user.username}}
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content is-normal">
+                        <li>點數:{{user.point}}</li>
+                        <li>Email:{{user.email}}
+                            {% if not user.certification %}
+                            {% if not message %}
+                            <a href="{% url 'activate-email' %}">認證</a>(送100點)
+                            {% endif %}
+                            {% else %}
+                            (已認證)
+                            {% endif %}
+                        </li>
+                        <li>居住地:{{user.city}}</li>
+                        <li>身分:{{user.respondent}}</li>
+                        <div id="message" class="has-text-right">
+                            {% if message %}
+                            <p style="color: red;">{{message}}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                <footer class="card-footer has-background-danger">
+                    <a href="{% url 'update' user.id %}" class="card-footer-item has-text-white">資訊修改</a>
+                    <a href="{% url 'purchase' %}" class="card-footer-item has-text-white">點數儲值</a>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            {% if user.case_set.all|length == 0 %}
+            <h2 class="is-size-5 has-text-centered box has-text-danger has-background-warning">目前無發布專案</h2>
+            {% else %}
+            {% include 'pagination.html' %}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div id="cases-table">
+                <table border="1" class="table is-size-6 is-bordered is-striped is-fullwidth">
+                    <thead>
+                        <tr class="th is-selected has-text-centered has-background-dark">
+                            <th>日期</th>
+                            <th>標題</th>
+                            <th>金額</th>
+                            <th>分類</th>
+                            <th>檢視次數</th>
+                            <th>更新日期</th>
+                            <th>功能</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for case in page_obj %}
+                        <tr class="has-text-vcentered">
+                            <td class="is-vcentered">{{case.createdon|date:"Y/m/d"}}</td>
+                            <td class="is-vcentered"><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
+                            <td class="is-vcentered">{{case.amount}}</td>
+                            <td class="is-vcentered">{{case.category}}</td>
+                            <td class="is-vcentered">{{case.view}}</td>
+                            <td class="is-vcentered">{{case.updatedon}}</td>
+                            <td><a href="{% url 'delete-case' case.id %}">刪除</a>
+                                <br><a href="{% url 'update-case' case.id %}">修改</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    <a href="{% url 'update' user.id %}">資訊修改</a>
-    <a href="{% url 'purchase' %}">點數儲值</a>
-</p>
-{% if user.case_set.all|length == 0 %}
-<h2>目前無發布Case</h2>
-{% else %}
-{% include 'pagination.html' %}
-<div id="cases-table">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>日期</th>
-                <th>標題</th>
-                <th>金額</th>
-                <th>分類</th>
-                <th>檢視次數</th>
-                <th>更新日期</th>
-                <th>功能</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for case in page_obj %}
-            <tr>
-                <td>{{case.createdon|date:"Y/m/d"}}</td>
-                <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
-                <td>{{case.amount}}</td>
-                <td>{{case.category}}</td>
-                <td>{{case.view}}</td>
-                <td>{{case.updatedon}}</td>
-                <td><a href="{% url 'delete-case' case.id %}">刪除</a>
-                    <br><a href="{% url 'update-case' case.id %}">修改</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+
 {% endif %}
 {% endblock %}
