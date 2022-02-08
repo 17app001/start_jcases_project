@@ -29,9 +29,9 @@
         <div id="navbarBasicExample" class="navbar-menu  has-background-grey-darker">
             {% if request.user.is_authenticated %}
             <div class="navbar-start">
-                <a href="{% url 'profile' request.user.id %}" class="navbar-item  has-text-danger">
+                <a href="{% url 'profile' request.user.id %}" class="navbar-item  has-text-warning">
                     {{request.user.username|upper}}</a>          
-                <a class="navbar-item  has-text-danger">
+                <a class="navbar-item  has-text-danger" href="{% url 'purchase' %}">
                     點數:{{request.user.point}}
                 </a>                 
             </div>
