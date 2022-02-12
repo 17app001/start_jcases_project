@@ -8,7 +8,7 @@
             <h1 class="is-size-1 has-text-centered has-text-warning-light">註冊</h1>
             <div class="columns is-centered">
                 <div class="column is-5 has-text-centered">
-                    <form action="" method="POST" class="is-size-5 box px-5">
+                    <form action="" method="POST" class="is-size-5 box px-5" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{form.as_p}}
                         <button class=" button is-warning is-size-5" type=" submit">註冊</button>

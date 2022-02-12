@@ -8,12 +8,13 @@ class ProfileForm(UserCreationForm):
         model = Profile
         # 增加email
         fields = ['username', 'email', 'password1',
-                  'password2', 'city', 'respondent']
+                  'password2', 'city', 'respondent', 'person_image']
 
         labels = {
             'email': '信箱',
             'city': '居住縣市',
             'respondent': '身分',
+            'person_image': '照片(default)',
         }
 
     def __init__(self, *args, **kwargs):

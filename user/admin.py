@@ -19,7 +19,7 @@ class ProfileAdmin(UserAdmin):
             'User role',
             {
                 'fields': [
-                    'point', 'certification', 'city', 'respondent'
+                    'point', 'certification', 'city', 'respondent','person_image',
                 ]
             }
         ]

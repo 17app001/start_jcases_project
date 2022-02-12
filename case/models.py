@@ -100,6 +100,8 @@ class Case(models.Model):
     updatedon = models.DateTimeField(auto_now_add=True)
     # 檢視次數
     view = models.IntegerField(default=0)
+    # 上傳檔案
+    file = models.FileField(null=True, blank=True, upload_to="files/")
 
     class Meta:
         ordering = ['-createdon']

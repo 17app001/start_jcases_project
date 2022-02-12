@@ -8,7 +8,7 @@ class CreateCaseForm(ModelForm):
         model = Case
         exclude = ['owner']
         fields = ['title', 'description', 'contact', 'category',
-                  'amount', 'period', 'skill', 'respondent', 'state', 'mode']
+                  'amount', 'period', 'skill', 'respondent', 'state', 'mode', 'file']
 
         widgets = {
             'respondent': forms.CheckboxSelectMultiple(),
