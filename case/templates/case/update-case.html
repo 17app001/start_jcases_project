@@ -2,16 +2,16 @@
 {% block content %}
 
 <h1>Update Case</h1>
-<form action="" method="POST">
+<form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit">更新</button>
 </form>
 
 {% if page == "case" %}
-    <a href="{% url 'case' form.instance.id %}">返回</a>
+<a href="{% url 'case' form.instance.id %}">返回</a>
 {% elif page == "profile" %}
-    <a href="{% url 'profile' request.user.id %}">返回</a>
+<a href="{% url 'profile' request.user.id %}">返回</a>
 {% endif %}
 
 {% endblock %}

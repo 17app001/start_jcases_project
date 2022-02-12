@@ -1,42 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Case</h1>
-<ul>
-    {% if request.user == case.owner %}
-    <p>
-        <a href="{% url 'delete-case' case.id %}">刪除</a>&nbsp;&nbsp;
-        <a href="{% url 'update-case' case.id %}">修改</a>&nbsp;&nbsp;
-        <a href="{% url 'cases' %}">返回</a>
-
-    </p>
-    {% endif %}
-
-    <li>[{{case.category}}]<b>{{case.title}}</b>(檢視次數:{{case.view}})</li>
-    <li>上架日期:{{case.createdon|date:"Y/m/d"}}</li>
-    <li>專案狀態:{{case.state}}</li>
-    <li>發案人:{{case.owner.username|upper}}({{case.owner.city}})</li>
-    <li>金額:{{case.amount}}</li>
-    <li>內容:{{case.description|linebreaks}}</li>
-    <li>技能:{{case.skill|linebreaks}}</li>
-
-    <li>合作方式:
-        {% if request.user.certification %}
-        {{case.contact}}
-        {% else %}
-        <a href="{% url 'activate-email' %}">請先認證Email</a>
-        {% endif %}
-    </li>
-
-    <li>合作週期:{{case.period}}</li>
-    <li>合作對象:
-        {% for respondent in case.respondent.all %}
-        {{respondent}}|
-        {% endfor %}
-    </li>
-    <li>合作方式:
-        {% for mode in case.mode.all %}
-        {{mode}}|
-        {% endfor %}
-    </li>
-</ul>
+<div class="container">
+    <div class="columns mt-3">
+        <div class="column is-size-4 box">
+            <p class="has-text-danger-dark">檢視次數:{{case.view}} &nbsp;<span
+                    class="has-text-dark is-underlined has-text-weight-bold">
+                    分類:{{case.category}}</span><a href="{% url 'cases' %}"> &nbsp;返回</a></p>
+            {% if request.user == case.owner %}
+            <div class="buttons mt-2">
+                <a class="button is-warning" href="{% url 'update-case' case.id %}">更新</a>
+                <a class="button is-danger" href="{% url 'delete-case' case.id %}">刪除</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="columns mt-1">
+        <div class="column">
+            <table class="table table is-bordered  is-narrow is-hoverable  is-fullwidth is-size-5">
+                <tbody>
+                    <tr class="has-text-vcentered">
+                        <td class="has-background-dark has-text-white has-text-vcentered">專案名稱</td>
+                        <td>{{case.title}}</td>
+                        <td>{{case.createdon|date:"Y/m/d"}}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">發案人</td>
+                        <td>
+                            {{case.owner.username|upper}}
+                        </td>
+                        <td>{{case.owner.city}}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">聯絡方式</td>
+                        <td colspan="2" style="font-weight: bold;color:darkblue">
+                            {% if request.user.certification %}
+                            {{case.contact}}
+                            {% else %}
+                            <a href="{% url 'activate-email' %}">請先認證Email</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">金額</td>
+                        <td style="color:red" colspan="2">{{case.amount}}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">所需技能</td>
+                        <td colspan="2">{{case.skill|linebreaks}}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">專案內容</td>
+                        <td colspan="2" class="is-size-6">{{case.description|linebreaks}}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">接案對象</td>
+                        <td>
+                            {% for resp in case.respondent.all %}
+                            {{resp}}
+                            {% endfor %}
+                        </td>
+                        <td class="has-text-centered is-vcentered" rowspan="4"
+                            style="color: blue;font-weight:bold;font-size: 24px;">
+                            {{case.state}}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">接案方式</td>
+                        <td>
+                            {% for mode in case.mode.all %}
+                            {{mode}}<br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">合作週期</td>
+                        <td>
+                            {{case.period}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="has-background-dark has-text-white">檔案附件</td>
+                        <td>
+                            {% if case.file and request.user.certification %}
+                            <a href="{{case.file.url}}">{{case.file}}</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

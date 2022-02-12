@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Delete Case</h1>
-<form action="" method="POST">
-    {% csrf_token %}
-    <h1>確定刪除?</h1>
-    <h2>{{case.title}}</h2>
-    <p>{{case.description|truncatechars:50}}</p>
-    <input type="submit" name="confirm" value="刪除">
-    <input type="submit" name="cancel" value="取消">
-</form>
-
+<div class="hero is-medium is-danger">
+    <div class="hero-body">
+        <p class="title">刪除發布專案</p>
+        <p class="subtitle has-text-white">
+            {{case.title}}
+        </p>
+        <div class="columns">
+            <div class="column is-4">
+                <form action="" method="POST">
+                    {% csrf_token %}                   
+                    <p>{{case.description|truncatechars:50}}</p>
+                    <div class="field">
+                        <input type="submit" class="button is-warning" name="confirm" value="刪除">
+                        <input type="submit" class="button is-warning" name="cancel" value="取消">  
+                    </div>                                   
+                </form>
+            </div>
+        </div>       
+    </div>   
+</div>
 {% endblock %}

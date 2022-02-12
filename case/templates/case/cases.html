@@ -46,23 +46,23 @@
                 <table border="1" class="table is-size-6 is-bordered is-striped is-fullwidth">
                     <thead>
                         <tr class="th is-selected has-text-centered has-background-dark">
-                            <th>日期</th>
-                            <th>標題</th>
-                            <th>金額</th>
-                            <th>分類</th>
-                            <th>縣市</th>
-                            <th>檢視次數</th>
+                            <th class="is-vcentered">日期</th>
+                            <th class="is-vcentered">標題</th>
+                            <th class="is-vcentered">金額</th>
+                            <th class="is-vcentered">分類</th>
+                            <th class="is-vcentered">縣市</th>
+                            <th class="is-vcentered">檢視次數</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for case in page_obj %}
-                        <tr class="td has-text-centered">
-                            <td>{{case.createdon|date:"Y/m/d"}}</td>
-                            <td><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
-                            <td class="has-text-danger">{{case.amount}}</td>
-                            <td>{{case.category}}</td>
-                            <td>{{case.owner.city}}</td>
-                            <td>{{case.view}}</td>
+                        <tr class="has-text-vcentered">
+                            <td class="is-vcentered">{{case.createdon|date:"Y/m/d"}}</td>
+                            <td class="is-vcentered"><a href="{% url 'case' case.id %}">{{case.title}}</a></td>
+                            <td class="is-vcentered has-text-danger">{{case.amount}}</td>
+                            <td class="is-vcentered">{{case.category}}</td>
+                            <td class="is-vcentered">{{case.owner.city}}</td>
+                            <td class="is-vcentered">{{case.view}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

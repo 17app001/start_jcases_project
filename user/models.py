@@ -42,6 +42,9 @@ class Profile(AbstractUser):
     respondent = models.ForeignKey(
         Respondent, on_delete=SET_NULL, null=True)
 
+    person_image = models.ImageField(
+        blank=True, null=True, default='default.png')
+
     def __str__(self):
         return self.username
 

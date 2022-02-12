@@ -139,8 +139,7 @@ def user_register(request):
 
     if request.method == 'POST':
         # 將資訊傳入
-        form = ProfileForm(request.POST)
-        print(form)
+        form = ProfileForm(request.POST, request.FILES)
         # 表單輸入是否正確
         if form.is_valid():
             user = form.save(commit=False)
@@ -166,7 +165,6 @@ def user_logout(request):
 
 # 登入
 def user_login(request):
-
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
