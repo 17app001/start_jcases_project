@@ -30,12 +30,12 @@
         <span aria-hidden="true"></span>
       </a>
     </div>
-    <div id="navbarBasicExample" class="navbar-menu  has-background-grey-darker">
+    <div id="navbarBasicExample" class="navbar-menu  has-background-info">
       {% if request.user.is_authenticated %}
       <div class="navbar-start">
-        <a href="{% url 'profile' request.user.id %}" class="navbar-item  has-text-warning">
+        <a href="{% url 'profile' request.user.id %}" class="navbar-item">
           {{request.user.username|upper}}</a>
-        <a class="navbar-item  has-text-danger" href="{% url 'purchase' %}">
+        <a class="navbar-item" href="{% url 'purchase' %}">
           點數:{{request.user.point}}
         </a>
       </div>
@@ -76,6 +76,7 @@
       });
     });
   </script>
+
 </body>
 
 </html>

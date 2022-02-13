@@ -1,29 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="hero is-medium is-info">
+<div class="hero is-medium">
     <div class="hero-body">
         <p class="title">Email:</p>
-        <p class="subtitle has-text-white">
-            {{user.email}}
+        <p class="subtitle">
+            <!-- {{user.email}} -->
         </p>
         <div class="columns">
             <div class="column is-4">
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="field">
-                        <label class="label has-text-white" for="new-email">輸入新的Email</label>                        
-                        <input type="email" class="input" name="new-email" id="new-email" value="{{request.user.email}}" {% if user.certification %} disabled {% endif %}>
+                        <label class="label" for="new-email">輸入新的Email
+                            {% if user.certification %}
+                            <span class="has-text-danger">(已認證無法修改)</span>
+                            {% endif %}
+                        </label>
+                        <input type="email" class="input" name="new-email" id="new-email" value="{{request.user.email}}"
+                            {% if user.certification %} disabled {% endif %}>
+                           
                     </div>
                     <div class="field">
-                        <label class="label has-text-white" for="id_respondent">請輸入新的身分({{request.user.respondent}})</label>                                              
+                        <label class="label"
+                            for="id_respondent">請輸入新的身分({{request.user.respondent}})</label>
                     </div>
                     <div class="field select">
-                        <select name="respondent-id" required id="id_respondent">          
+                        <select name="respondent-id" required id="id_respondent">
                             {% for respondent in respondents %}
                             <option value="{{respondent.id}}" {% if respondent.id == request.user.respondent.id %}
-                             selected="selected" {% endif %} >
-                                {{respondent}}</option>     
+                                selected="selected" {% endif %}>
+                                {{respondent}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -35,9 +42,7 @@
                     </div>
                 </form>
             </div>
-        </div>       
-    </div>   
+        </div>
+    </div>
 </div>
 {% endblock %}
-
-

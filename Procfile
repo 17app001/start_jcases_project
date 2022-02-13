@@ -1,0 +1,1 @@
+web: gunicorn jcases.wsgi

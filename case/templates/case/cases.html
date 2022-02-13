@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% block style %}
-{% endblock %}
+{% load static %}
 {% block content %}
 
 <div class="container">
     <div class="columns">
         <div class="column">
+            <img src="{% static './images/banner.png' %}" class="image" alt="" style="width:  100%;">
             <form action="{% url 'cases' %}" method="POST" class="box">
                 {% csrf_token %}
-                <div class="field">
+                <div class="field is-grouped">
                     <div class="select">
                         <select name="category" id="category">
                             <option value="">全部類別</option>
@@ -19,7 +19,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="select">
+                    <div class="select ml-1">
                         <select name="county" id="county">
                             <option value="">全部縣市</option>
                             {% for county in countys %}
@@ -29,12 +29,14 @@
                             {% endfor %}
                         </select>
                     </div>
+
+                    <input type="text" class="input ml-1" name="search" id="search" value="{{search}}">
                 </div>
                 <div class="field">
-                    <input type="text" class="input" name="search" id="search" value="{{search}}">                   
+
                 </div>
-                <div class="field has-text-right">
-                    <button type="submit" class="button is-warning">搜尋</button>                    
+                <div class="field has-text-left">
+                    <button type="submit" class="button is-warning">搜尋</button>
                     <span class="is-size-4 ml-2 has-text-link">共{{cases_length}}筆資料</span>
                 </div>
             </form>
@@ -69,43 +71,43 @@
                 </table>
             </div>
         </div>
-    <div class="column is-3">        
-        <div class="content is-normal">
-            <h3 class="is-size-5 has-text-centered box has-background-danger has-text-white">專案排行榜</h3>
+        <div class="column is-3">
+            <div class="content is-normal">
+                <h3 class="is-size-5 has-text-centered box has-background-danger has-text-white">專案排行榜</h3>
                 <ol>
                     {% for case in top5_cases %}
+                    {% if forloop.counter0 == 0 %}
+                    <li><a href="{% url 'case' case.id %}"> <b style="color:brown;"
+                                class="is-size-5">{{case|truncatechars:20}}({{case.view}})</a></b></li>
+                    {% else %}
+                    <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    </ul>
+            </div>
+            <div class="content is-normal">
+                <h3 class="is-size-5 has-text-centered box has-background-primary has-text-white">發布排行榜</h3>
+                <ul style="list-style-type: none;" class="box ml-1">
+                    {% for user in top5_users %}
+                    <li class="has-text-centered">
+                        {{user|upper}}
                         {% if forloop.counter0 == 0 %}
-                            <li><a href="{% url 'case' case.id %}"> <b style="color:brown;" class="is-size-5">{{case|truncatechars:20}}({{case.view}})</a></b></li>
-                        {% else %}
-                            <li><a href="{% url 'case' case.id %}">{{case|truncatechars:20}}</a></li>
+                        <b>({{user.case_set.all|length}})</b>
                         {% endif %}
+                    </li>
                     {% endfor %}
                 </ul>
+            </div>
+            <div class="column is-narrow has-text-centered">
+                {% include 'pagination.html' %}
+            </div>
         </div>
-        <div class="content is-normal">
-            <h3 class="is-size-5 has-text-centered box has-background-primary has-text-white">發布排行榜</h3>
-                <ul style="list-style-type: none;" class="box ml-1">
-                    {% for user in top5_users %}         
-                        <li class="has-text-centered">
-                            {{user|upper}}
-                            {% if forloop.counter0 == 0 %}
-                            <b>({{user.case_set.all|length}})</b>
-                            {% endif %}            
-                        </li>       
-                {% endfor %}
-                </ul>
-        </div>
-        <div class="column is-narrow has-text-centered"> 
-            {% include 'pagination.html' %}
-        </div>
-    </div>    
-</div>
-<footer class="footer">
-    <div class="content has-text-centered">
-      <b>
-        &copy; 2022 Jerry Chen ver 1.0
-      </b>
     </div>
-</footer>
-{% endblock %}
-
+    <footer class="footer has-background-grey-darker">
+        <div class="content has-text-centered">
+            <b>
+                &copy; 2022 Jerry Chen ver 1.0
+            </b>
+        </div>
+    </footer>
+    {% endblock %}
