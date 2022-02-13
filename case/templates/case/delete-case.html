@@ -10,15 +10,15 @@
         <div class="columns">
             <div class="column is-4">
                 <form action="" method="POST">
-                    {% csrf_token %}                   
+                    {% csrf_token %}
                     <p>{{case.description|truncatechars:50}}</p>
                     <div class="field">
                         <input type="submit" class="button is-warning" name="confirm" value="刪除">
-                        <input type="submit" class="button is-warning" name="cancel" value="取消">  
-                    </div>                                   
+                        <input type="submit" class="button is-warning" name="cancel" value="取消">
+                    </div>
                 </form>
             </div>
-        </div>       
-    </div>   
+        </div>
+    </div>
 </div>
 {% endblock %}

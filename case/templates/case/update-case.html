@@ -1,17 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Update Case</h1>
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">更新</button>
-</form>
+<div class="hero has-background-link">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns box px-5 is-centered">
+                <div class="column is-6 has-text-centered">
+                    <form action="" method="POST" class="is-size-5" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <label class="label is-size-5" for="">類別</label>
+                                {{ form.category }}
+                            </p>
+                            <div class="field">
+                                <div class="control">
+                                    <label class="label is-size-5" for="">案子名稱</label>
+                                    {{ form.title }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label class="label is-size-5" for="">案子說明</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="label is-size-5" for="">聯絡方式</label>
+                            {{form.contact}}
+                        </div>
+                        <div class="field">
+                            <div class="control has-text-left">
+                                <button class=" button is-success is-size-5" type=" submit">更新</button>
+                            </div>
+                            {% if page == "case" %}
+                            <a href="{% url 'case' form.instance.id %}">返回</a>
+                            {% elif page == "profile" %}
+                            <a href="{% url 'profile' request.user.id %}">返回</a>
+                            {% endif %}
 
-{% if page == "case" %}
-<a href="{% url 'case' form.instance.id %}">返回</a>
-{% elif page == "profile" %}
-<a href="{% url 'profile' request.user.id %}">返回</a>
-{% endif %}
-
+                        </div>
+                </div>
+                <div class="column is-5 has-text-centered">
+                    <div class="control">
+                        <label class="label is-size-5" for="">所需技能</label>
+                        {{ form.skill }}
+                    </div>
+                    <div class="field is-grouped has-text-left">
+                        <p class="control">
+                            <label class="label is-size-5" for="">配合身分</label>
+                            {{ form.respondent }}
+                        </p>
+                    </div>
+                    <div class="field is-grouped has-text-left">
+                        <p class="control">
+                            <label class="label is-size-5" for="">配合模式</label>
+                            {{ form.mode }}
+                        </p>
+                    </div>
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <label class="label is-size-5" for="">週期</label>
+                            {{ form.period }}
+                        </p>
+                        <p class="control">
+                            <label class="label is-size-5" for="">金額</label>
+                            {{ form.amount }}
+                        </p>
+                        <p class="control">
+                            <label class="label is-size-5" for="">狀態</label>
+                            {{ form.state }}
+                        </p>
+                    </div>
+                    <div class="field">
+                        <div class="control has-text-left">
+                            <label class="label is-size-5" for="">檔案上傳</label>
+                            {{ form.file }}
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
