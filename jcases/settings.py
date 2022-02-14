@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-zz6l+3!ag04x7(x$obkt-ce(+h@biuuhlv$^9mxj#y)6_j4@i#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -106,13 +107,11 @@ LANGUAGE_CODE = "zh-Hant"
 TIME_ZONE = "Asia/Taipei"
 USE_TZ = False
 
-
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -142,3 +141,7 @@ EMAIL_HOST_PASSWORD = 'me516888'
 # 設定meida
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+
+# 設定STATIC 目錄
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
