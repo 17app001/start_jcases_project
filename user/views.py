@@ -148,7 +148,8 @@ def user_register(request):
 
             login(request, user)
 
-            return redirect('index')
+            # return redirect('index')
+            return redirect('profile', id=user.id)
 
     return render(request, './user/register.html', {'form': form})
 

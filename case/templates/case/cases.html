@@ -42,6 +42,9 @@
             </form>
         </div>
     </div>
+    <div class="column is-narrow has-text-centered">
+        {% include 'pagination.html' %}
+    </div>
     <div class="columns">
         <div class="column">
             <div id="cases-table">
@@ -97,17 +100,14 @@
                     </li>
                     {% endfor %}
                 </ul>
-            </div>
-            <div class="column is-narrow has-text-centered">
-                {% include 'pagination.html' %}
-            </div>
+            </div>          
         </div>
     </div>
-    <footer class="footer has-background-grey-darker">
-        <div class="content has-text-centered">
-            <b>
-                &copy; 2022 Jerry Chen ver 1.0
-            </b>
+    <footer class="has-background-grey-darker">
+        <div class="has-text-centered has-text-white">
+         
+                &copy; 2022 JCASES 開發團隊 Beta v0.5
+           
         </div>
     </footer>
     {% endblock %}
