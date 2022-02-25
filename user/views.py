@@ -1,5 +1,6 @@
 from cmath import log
 from email import message
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from user.models import Profile, Respondent
@@ -13,23 +14,43 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.conf import settings
 from .utils import generator_token
+from ecpay import ecpay
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
+def ecpay_result(request,id):
+    result=request.POST
+    user=Profile.objects.get(id=id)
+    print(result)
+    # 正確回傳值
+    if result.get('RtnCode')=='1':
+        # 儲值並寫入資料庫
+        user.point += eval(result['amount'])
+        user.save()
+
+        return redirect('profile', id=user.id)    
+
+    return render(request,'./user/ecpay-result.html',{'result':result.get('RtnMsg')})
+
+@login_required(login_url='login')
+def ecpay_view(request,total_amount):
+    ecpay.settings['item_name']=f'{total_amount}點數'
+    ecpay.settings['total_amount']=total_amount
+    ecpay.settings['user_id']=request.user.id
+  
+    return HttpResponse(ecpay.all()) 
 
 @login_required(login_url='login')
 def purchase(request):
     if request.method == 'POST':
         user = request.user
         purchase_point = eval(request.POST.get('purchase-select'))
-        user.point += purchase_point
-        user.save()
-
-        return redirect('profile', id=user.id)
-
+      
+        return redirect('ecpay-view',purchase_point)
+   
     return render(request, './user/purchase.html')
 
 # 啟動玩家
-
-
 @login_required(login_url='login')
 def user_activate(requset, uidb64, token):
     try:
@@ -46,9 +67,6 @@ def user_activate(requset, uidb64, token):
         user.save()
 
     return redirect('profile', user.id)
-
-# Create your views here.
-
 
 @login_required(login_url='login')
 def activate_email(request):
@@ -117,7 +135,6 @@ def update(request, id):
 
     return render(request, './user/update.html', {'message': message, 'respondents': respondents})
 
-
 # 個人資訊
 @login_required(login_url='login')
 def profile(request, id):
@@ -132,7 +149,6 @@ def profile(request, id):
     respsone.set_cookie('page', 'profile')
 
     return respsone
-
 
 def user_register(request):
     form = ProfileForm()
@@ -154,8 +170,6 @@ def user_register(request):
     return render(request, './user/register.html', {'form': form})
 
 # 登出
-
-
 @login_required(login_url='login')
 def user_logout(request):
     if request.user.is_authenticated:
@@ -180,8 +194,6 @@ def user_login(request):
                     message = '密碼錯誤'
                 else:
                     message = '帳號錯誤'
-
-                print(message)
 
         except Exception as e:
             print(e)

@@ -25,6 +25,6 @@ urlpatterns = [
     path('activate-email/', views.activate_email,name='activate-email'),
     path('activate-user/<uidb64>/<token>/',views.user_activate, name='activate'),
     path('purchase/',views.purchase, name='purchase'),
-
-  
+    path('ecpay/<int:total_amount>',views.ecpay_view, name='ecpay-view'),
+    path('ecpay-result/<str:id>/',views.ecpay_result, name='ecpay-result'),  
 ]
