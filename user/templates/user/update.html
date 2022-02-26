@@ -3,46 +3,27 @@
 
 <div class="hero is-medium">
     <div class="hero-body">
-        <p class="title">Email:</p>
-        <p class="subtitle">
-            <!-- {{user.email}} -->
+        <p class="title has-text-danger">
+            更新資訊
         </p>
         <div class="columns">
-            <div class="column is-4">
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <div class="field">
-                        <label class="label" for="new-email">輸入新的Email
-                            {% if user.certification %}
-                            <span class="has-text-danger">(已認證無法修改)</span>
-                            {% endif %}
-                        </label>
-                        <input type="email" class="input" name="new-email" id="new-email" value="{{request.user.email}}"
-                            {% if user.certification %} disabled {% endif %}>
-                           
-                    </div>
-                    <div class="field">
-                        <label class="label"
-                            for="id_respondent">請輸入新的身分({{request.user.respondent}})</label>
-                    </div>
-                    <div class="field select">
-                        <select name="respondent-id" required id="id_respondent">
-                            {% for respondent in respondents %}
-                            <option value="{{respondent.id}}" {% if respondent.id == request.user.respondent.id %}
-                                selected="selected" {% endif %}>
-                                {{respondent}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="field">
-                        <button class="button is-info is-danger" type="submit">更新</button>
-                        {% if message %}
-                        <p style="color: red;">{{message}}</p>
-                        {% endif %}
-                    </div>
-                </form>
-            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}                             
+                {{form.as_p}}
+            <button class="button is-warning" type="submit">確定</button>
+            </form>
         </div>
-    </div>
+    </div>   
+
+    <!-- <div class="columns is-centered">
+        <div class="column">
+            <div id="message" class="has-text-centered has-text-warning">
+                {% if message %}
+                <p class="has-text-danger">{{message}}</p>
+                {% endif %}
+            </div>                   
+        </div>
+    </div> -->
+   
 </div>
 {% endblock %}

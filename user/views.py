@@ -16,6 +16,7 @@ from django.conf import settings
 from .utils import generator_token
 from ecpay import ecpay
 from django.views.decorators.csrf import csrf_exempt
+from .forms import UpdateProfileForm
 
 @csrf_exempt
 def ecpay_result(request,id):
@@ -105,35 +106,52 @@ def activate_email(request):
 
 @login_required(login_url='login')
 def update(request, id):
-    respondents = Respondent.objects.all()
     user = Profile.objects.get(id=id)
-    message = None
 
-    if request.method == 'POST':
-        new_email = request.POST.get('new-email')
-        respondent_id = request.POST.get('respondent-id')
+    if request.method=='POST':
+        form = UpdateProfileForm(request.POST,request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            # login(request, user)
 
-        # 已認證
-        if user.certification:
-            setattr(user, 'respondent', Respondent.objects.get(id=respondent_id))
-            message = '資料更新成功!'
-            user.save()
+            return redirect('profile',user.id)
 
-            return redirect('profile', id=user.id)
+    if request.method == 'GET':
+        form = UpdateProfileForm(instance=user)
 
-        elif not new_email:
-            message = '請輸入Email'
-        elif not Profile.objects.filter(email=new_email) or user.email == new_email:
-            setattr(user, 'email', new_email)
-            setattr(user, 'respondent', Respondent.objects.get(id=respondent_id))
-            message = '資料更新成功!'
-            user.save()
+    return render(request, './user/update.html', {'message': message, 'form': form})
 
-            return redirect('profile', id=user.id)
-        else:
-            message = 'Email已經註冊'
+# @login_required(login_url='login')
+# def update(request, id):
+#     respondents = Respondent.objects.all()
+#     user = Profile.objects.get(id=id)
+#     message = None
 
-    return render(request, './user/update.html', {'message': message, 'respondents': respondents})
+#     if request.method == 'POST':
+#         new_email = request.POST.get('new-email')
+#         respondent_id = request.POST.get('respondent-id')
+
+#         # 已認證
+#         if user.certification:
+#             setattr(user, 'respondent', Respondent.objects.get(id=respondent_id))
+#             message = '資料更新成功!'
+#             user.save()
+
+#             return redirect('profile', id=user.id)
+
+#         elif not new_email:
+#             message = '請輸入Email'
+#         elif not Profile.objects.filter(email=new_email) or user.email == new_email:
+#             setattr(user, 'email', new_email)
+#             setattr(user, 'respondent', Respondent.objects.get(id=respondent_id))
+#             message = '資料更新成功!'
+#             user.save()
+
+#             return redirect('profile', id=user.id)
+#         else:
+#             message = 'Email已經註冊'
+
+#     return render(request, './user/update.html', {'message': message, 'respondents': respondents})
 
 # 個人資訊
 @login_required(login_url='login')
@@ -176,7 +194,6 @@ def user_logout(request):
         logout(request)
 
     return redirect('login')
-
 
 # 登入
 def user_login(request):

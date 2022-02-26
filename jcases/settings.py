@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-zz6l+3!ag04x7(x$obkt-ce(+h@biuuhlv$^9mxj#y)6_j4@i#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "case.apps.CaseConfig",
     "user.apps.UserConfig",
+    'storages',
+
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,9 @@ EMAIL_HOST_PASSWORD = 'me516888'
 # 設定meida
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_ACCESS_KEY_ID = 'AKIA2YRF54FGP3YA3KUW'
+AWS_S3_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'jcases-s3'
+AWS_QUERYSTRING_AUTH = False

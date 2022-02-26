@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 requests = "*"
+django-storages = "*"
+boto3 = "*"
 
 [dev-packages]
 
